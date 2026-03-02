@@ -1,0 +1,13 @@
+7.Write a program to take two numbers as input and print their difference if the first number is greater than the second number otherwise print their sum.
+code:
+import java.util.Scanner;
+public class Main {
+    public static void main(String[]args) {
+        Scanner sc=new Scanner(System.in);
+        int n1=sc.nextInt();
+        int n2=sc.nextInt();
+        int result=(n1>n2)?(n1-n2):(n1+n2);
+        System.out.println(result);
+    }
+}
+

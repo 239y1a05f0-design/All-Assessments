@@ -1,0 +1,11 @@
+1.Write a program which prints 1000 "Hello World".
+code:
+public class Main
+{
+    public static void main(String[]args){
+        for(int p=0;p<1000;p++){
+            System.out.println("Hello World");
+        }
+    }
+}
+

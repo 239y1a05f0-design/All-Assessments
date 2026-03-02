@@ -1,0 +1,13 @@
+8.Find the perimeter of a rectangle.
+code:
+import java.util.Scanner;
+public class Main {
+    public static void main(String[]args) {
+        Scanner sc=new Scanner(System.in);
+        int c=sc.nextInt();
+        int d=sc.nextInt();
+        int perimeter=2*(c+d);
+        System.out.println(perimeter);
+    }
+}
+
