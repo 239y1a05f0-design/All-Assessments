@@ -1,0 +1,14 @@
+import java.util.Scanner;
+class Square {
+    int getSquare(int n) {
+        return n * n;
+    }
+}
+public class Q3 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int num = sc.nextInt();
+        Square obj = new Square();
+        System.out.println(obj.getSquare(num));
+    }
+}
