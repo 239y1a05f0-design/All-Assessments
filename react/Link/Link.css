@@ -1,0 +1,22 @@
+
+section {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+section h1,
+section h2 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+section p {
+  color: #555;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.page {
+  max-width: 800px;
+  margin: auto;
+}
