@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MyLibrary – Digital Library</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f6f8;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  background: #283593;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+nav h1 {
+  font-size: 22px;
+}
+
+.nav-links a {
+  margin-left: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-links a.active {
+  text-decoration: underline;
+}
+
+/* ===== SECTIONS ===== */
+section {
+  display: none;
+  padding: 30px;
+  min-height: 70vh;
+}
+
+section.active {
+  display: block;
+}
+
+/* ===== HOME ===== */
+.hero {
+  background: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f") center/cover;
+  padding: 80px 20px;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.features {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* ===== BOOKS ===== */
+.controls {
+  margin-bottom: 15px;
+}
+
+.controls input, .controls select {
+  padding: 8px;
+  margin-right: 10px;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+}
+
+.book {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.book button {
+  margin-top: 10px;
+  padding: 8px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background: #283593;
+  color: white;
+}
+
+.book.issued {
+  opacity: 0.6;
+}
+
+/* ===== FORMS ===== */
+form {
+  max-width: 400px;
+  background: white;
+  padding: 25px;
+  margin: auto;
+  border-radius: 10px;
+}
+
+form input, form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+form button {
+  background: #283593;
+  color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ===== ISSUED BOOKS ===== */
+.issued-book {
+  background: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #1a237e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h1>📚 MyLibrary</h1>
+  <div class="nav-links">
+    <a onclick="showPage('home')" class="active">Home</a>
+    <a onclick="showPage('books')">Books</a>
+    <a onclick="showPage('issued')">Issued Books</a>
+    <a onclick="showPage('about')">About</a>
+    <a onclick="showPage('contact')">Contact</a>
+    <a onclick="showPage('login')" id="loginLink">Login</a>
+    <a onclick="logout()" id="logoutLink" style="display:none;">Logout</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="hero">
+    <h2>Welcome to MyLibrary</h2>
+    <p>Your Digital Gateway to Knowledge</p>
+  </div>
+
+  <div class="features">
+    <div class="card">📖 Thousands of Books</div>
+    <div class="card">🕒 Easy Issue & Return</div>
+    <div class="card">💻 Digital Records</div>
+  </div>
+</section>
+
+<!-- BOOKS -->
+<section id="books">
+  <h2>Available Books</h2>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search by title or author" onkeyup="renderBooks()">
+    <select id="category" onchange="renderBooks()">
+      <option value="">All Categories</option>
+      <option>Fiction</option>
+      <option>Science</option>
+      <option>History</option>
+    </select>
+  </div>
+
+  <div class="book-grid" id="bookList"></div>
+</section>
+
+<!-- ISSUED BOOKS -->
+<section id="issued">
+  <h2>Issued Books</h2>
+  <div id="issuedList"></div>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+  <form onsubmit="login(event)">
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button>Login</button>
+    <p>New user? <a onclick="showPage('signup')">Signup</a></p>
+  </form>
+</section>
+
+<!-- SIGNUP -->
+<section id="signup">
+  <form onsubmit="signup(event)">
+    <h3>Signup</h3>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="password" id="confirm" placeholder="Confirm Password" required>
+    <button>Register</button>
+  </form>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2>About MyLibrary</h2>
+  <p>
+    MyLibrary is a modern digital library system designed to make
+    book management simple and efficient.
+  </p>
+  <br>
+  <p>
+    📜 Rules: Maintain return dates, handle books with care, and
+    ensure membership compliance.
+  </p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <form onsubmit="contact(event)">
+    <h3>Contact Us</h3>
+    <input type="text" placeholder="Name" required>
+    <input type="email" placeholder="Email" required>
+    <textarea placeholder="Message" required></textarea>
+    <button>Send Message</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>📍 MyLibrary, India | ⏰ Mon–Sat 9AM–6PM</p>
+  <p>✉ support@mylibrary.com</p>
+  <p>© 2026 MyLibrary</p>
+</footer>
+
+<script>
+/* ===== DATA ===== */
+const books = [
+  { id: 1, title: "The Alchemist", author: "Paulo Coelho", category: "Fiction", issued: false },
+  { id: 2, title: "A Brief History of Time", author: "Stephen Hawking", category: "Science", issued: false },
+  { id: 3, title: "World History", author: "H. G. Wells", category: "History", issued: false }
+];
+
+let issuedBooks = JSON.parse(localStorage.getItem("issuedBooks")) || [];
+
+/* ===== NAVIGATION ===== */
+function showPage(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* ===== BOOKS ===== */
+function renderBooks() {
+  const search = document.getElementById("search").value.toLowerCase();
+  const category = document.getElementById("category").value;
+  const list = document.getElementById("bookList");
+
+  list.innerHTML = "";
+
+  books.filter(b =>
+    (b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search)) &&
+    (category === "" || b.category === category)
+  ).forEach(b => {
+    list.innerHTML += `
+      <div class="book ${b.issued ? 'issued' : ''}">
+        <h4>${b.title}</h4>
+        <p>Author: ${b.author}</p>
+        <p>Category: ${b.category}</p>
+        <p>Status: ${b.issued ? 'Issued' : 'Available'}</p>
+        <button ${b.issued ? 'disabled' : ''} onclick="issueBook(${b.id})">
+          Issue Book
+        </button>
+      </div>
+    `;
+  });
+}
+
+/* ===== ISSUE / RETURN ===== */
+function issueBook(id) {
+  const book = books.find(b => b.id === id);
+  book.issued = true;
+  issuedBooks.push({ ...book, date: new Date().toLocaleDateString() });
+  localStorage.setItem("issuedBooks", JSON.stringify(issuedBooks));
+  renderBooks();
+  renderIssued();
+}
+
+function returnBook(id) {
+  const book = books.find(b => b.id === id);
+  book.issued = false;
+  issuedBooks = issuedBooks.filter(b => b.id !== id);
+  localStorage.setItem("issuedBooks", JSON.stringify(issuedBooks));
+  renderBooks();
+  renderIssued();
+}
+
+function renderIssued() {
+  const div = document.getElementById("issuedList");
+  div.innerHTML = "";
+
+  if (issuedBooks.length === 0) {
+    div.innerHTML = "<p>No books issued.</p>";
+    return;
+  }
+
+  issuedBooks.forEach(b => {
+    div.innerHTML += `
+      <div class="issued-book">
+        <div>
+          <strong>${b.title}</strong><br>
+          ${b.author}<br>
+          Issued on: ${b.date}
+        </div>
+        <button onclick="returnBook(${b.id})">Return</button>
+      </div>
+    `;
+  });
+}
+
+/* ===== AUTH ===== */
+function signup(e) {
+  e.preventDefault();
+  if (password.value !== confirm.value) {
+    alert("Passwords do not match");
+    return;
+  }
+  localStorage.setItem("user", JSON.stringify({
+    email: email.value,
+    password: password.value
+  }));
+  alert("Signup successful");
+  showPage("login");
+}
+
+function login(e) {
+  e.preventDefault();
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user && user.email === loginEmail.value && user.password === loginPassword.value) {
+    alert("Login successful");
+    loginLink.style.display = "none";
+    logoutLink.style.display = "inline";
+    showPage("home");
+  } else {
+    alert("Invalid credentials");
+  }
+}
+
+function logout() {
+  loginLink.style.display = "inline";
+  logoutLink.style.display = "none";
+  showPage("home");
+}
+
+/* ===== CONTACT ===== */
+function contact(e) {
+  e.preventDefault();
+  alert("Message sent successfully");
+}
+
+/* INIT */
+renderBooks();
+renderIssued();
+</script>
+
+</body>
+</html>

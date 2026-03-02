@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HealthCare – Clinic Management System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f7fb;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  background: #0d47a1;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+nav h1 {
+  font-size: 22px;
+}
+
+.nav-links a {
+  margin-left: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-links a.active {
+  text-decoration: underline;
+}
+
+/* ===== SECTIONS ===== */
+section {
+  display: none;
+  padding: 30px;
+  min-height: 70vh;
+}
+
+section.active {
+  display: block;
+}
+
+/* ===== HOME ===== */
+.hero {
+  background: url("https://images.unsplash.com/photo-1580281657521-6c3e0f5d7b44") center/cover;
+  padding: 80px 20px;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.cards {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* ===== DOCTORS ===== */
+.controls {
+  margin-bottom: 15px;
+}
+
+.controls input, .controls select {
+  padding: 8px;
+  margin-right: 10px;
+}
+
+.doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+}
+
+.doctor {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+/* ===== FORMS ===== */
+form {
+  max-width: 450px;
+  background: white;
+  padding: 25px;
+  margin: auto;
+  border-radius: 10px;
+}
+
+form input, form select, form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+form button {
+  background: #0d47a1;
+  color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ===== APPOINTMENTS ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 20px;
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table th {
+  background: #0d47a1;
+  color: white;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #0b3c91;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h1>🏥 HealthCare</h1>
+  <div class="nav-links">
+    <a onclick="showPage('home')" class="active">Home</a>
+    <a onclick="showPage('doctors')">Doctors</a>
+    <a onclick="showPage('appointments')">Appointments</a>
+    <a onclick="showPage('about')">About</a>
+    <a onclick="showPage('contact')">Contact</a>
+    <a onclick="showPage('login')" id="loginLink">Login</a>
+    <a onclick="logout()" id="logoutLink" style="display:none;">Logout</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="hero">
+    <h2>Welcome to HealthCare Clinic</h2>
+    <p>Quality Care • Trusted Doctors • Easy Appointments</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">👨‍⚕️ Expert Doctors</div>
+    <div class="card">📅 Easy Appointment Booking</div>
+    <div class="card">❤️ Patient-Centered Care</div>
+  </div>
+</section>
+
+<!-- DOCTORS -->
+<section id="doctors">
+  <h2>Our Doctors</h2>
+
+  <div class="controls">
+    <input type="text" id="doctorSearch" placeholder="Search doctor" onkeyup="renderDoctors()">
+    <select id="department" onchange="renderDoctors()">
+      <option value="">All Departments</option>
+      <option>Cardiology</option>
+      <option>Dermatology</option>
+      <option>General</option>
+    </select>
+  </div>
+
+  <div class="doctor-grid" id="doctorList"></div>
+</section>
+
+<!-- APPOINTMENTS -->
+<section id="appointments">
+  <h2>Book Appointment</h2>
+
+  <form onsubmit="bookAppointment(event)">
+    <input type="text" id="patientName" placeholder="Patient Name" required>
+    <select id="doctorSelect" required></select>
+    <input type="date" id="date" required>
+    <input type="time" id="time" required>
+    <textarea id="reason" placeholder="Reason for visit" required></textarea>
+    <button>Book Appointment</button>
+  </form>
+
+  <h3 style="margin-top:30px;">My Appointments</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Reason</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="appointmentList"></tbody>
+  </table>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+  <form onsubmit="login(event)">
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button>Login</button>
+    <p>New user? <a onclick="showPage('signup')">Signup</a></p>
+  </form>
+</section>
+
+<!-- SIGNUP -->
+<section id="signup">
+  <form onsubmit="signup(event)">
+    <h3>Signup</h3>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="password" id="confirm" placeholder="Confirm Password" required>
+    <input type="text" id="phone" placeholder="Contact Number" required>
+    <button>Register</button>
+  </form>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2>About HealthCare</h2>
+  <p>
+    HealthCare Clinic has been serving patients with dedication,
+    advanced treatments, and compassionate care.
+  </p>
+  <br>
+  <p>
+    Services include general consultation, cardiology,
+    dermatology, and preventive healthcare.
+  </p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <form onsubmit="contact(event)">
+    <h3>Contact Us</h3>
+    <input type="text" placeholder="Name" required>
+    <input type="email" placeholder="Email" required>
+    <textarea placeholder="Message" required></textarea>
+    <button>Send Message</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>📍 HealthCare Clinic, India</p>
+  <p>⏰ Mon–Sat 9AM–7PM | ☎ 9876543210</p>
+  <p>✉ support@healthcare.com</p>
+  <p>© 2026 HealthCare</p>
+</footer>
+
+<script>
+/* ===== DOCTOR DATA ===== */
+const doctors = [
+  { name: "Dr. Sharma", dept: "General", exp: "10 years" },
+  { name: "Dr. Mehta", dept: "Cardiology", exp: "12 years" },
+  { name: "Dr. Rao", dept: "Dermatology", exp: "8 years" }
+];
+
+let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+/* ===== NAVIGATION ===== */
+function showPage(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* ===== DOCTORS ===== */
+function renderDoctors() {
+  const search = doctorSearch.value.toLowerCase();
+  const dept = department.value;
+  const list = document.getElementById("doctorList");
+  list.innerHTML = "";
+
+  doctors.filter(d =>
+    d.name.toLowerCase().includes(search) &&
+    (dept === "" || d.dept === dept)
+  ).forEach(d => {
+    list.innerHTML += `
+      <div class="doctor">
+        <h4>${d.name}</h4>
+        <p>Department: ${d.dept}</p>
+        <p>Experience: ${d.exp}</p>
+        <p>Status: Available</p>
+      </div>
+    `;
+  });
+
+  doctorSelect.innerHTML = doctors.map(d =>
+    `<option>${d.name} (${d.dept})</option>`
+  ).join("");
+}
+
+/* ===== APPOINTMENTS ===== */
+function bookAppointment(e) {
+  e.preventDefault();
+  const appt = {
+    doctor: doctorSelect.value,
+    date: date.value,
+    time: time.value,
+    reason: reason.value
+  };
+  appointments.push(appt);
+  localStorage.setItem("appointments", JSON.stringify(appointments));
+  renderAppointments();
+  alert("Appointment booked successfully");
+}
+
+function cancelAppointment(index) {
+  appointments.splice(index, 1);
+  localStorage.setItem("appointments", JSON.stringify(appointments));
+  renderAppointments();
+}
+
+function renderAppointments() {
+  const tbody = document.getElementById("appointmentList");
+  tbody.innerHTML = "";
+
+  appointments.forEach((a, i) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${a.doctor}</td>
+        <td>${a.date}</td>
+        <td>${a.time}</td>
+        <td>${a.reason}</td>
+        <td><button onclick="cancelAppointment(${i})">Cancel</button></td>
+      </tr>
+    `;
+  });
+}
+
+/* ===== AUTH ===== */
+function signup(e) {
+  e.preventDefault();
+  if (password.value !== confirm.value) {
+    alert("Passwords do not match");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone.value)) {
+    alert("Invalid phone number");
+    return;
+  }
+  localStorage.setItem("user", JSON.stringify({
+    name: name.value,
+    email: email.value,
+    password: password.value
+  }));
+  alert("Signup successful");
+  showPage("login");
+}
+
+function login(e) {
+  e.preventDefault();
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user && user.email === loginEmail.value && user.password === loginPassword.value) {
+    alert("Login successful");
+    loginLink.style.display = "none";
+    logoutLink.style.display = "inline";
+    patientName.value = user.name;
+    showPage("home");
+  } else {
+    alert("Invalid credentials");
+  }
+}
+
+function logout() {
+  loginLink.style.display = "inline";
+  logoutLink.style.display = "none";
+  showPage("home");
+}
+
+/* ===== CONTACT ===== */
+function contact(e) {
+  e.preventDefault();
+  alert("Message sent successfully");
+}
+
+/* INIT */
+renderDoctors();
+renderAppointments();
+</script>
+
+</body>
+</html>

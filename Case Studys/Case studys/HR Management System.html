@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HRPro – HR Management System</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f6f8;
+}
+
+nav {
+  background: #2c3e50;
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+nav ul li {
+  cursor: pointer;
+}
+
+nav ul li:hover {
+  text-decoration: underline;
+}
+
+.container {
+  padding: 25px;
+}
+
+section {
+  display: none;
+}
+
+section.active {
+  display: block;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+button {
+  background: #1abc9c;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #16a085;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+footer {
+  background: #2c3e50;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h2>HRPro</h2>
+  <ul>
+    <li onclick="showPage('home')">Home</li>
+    <li onclick="showPage('employees')">Employees</li>
+    <li onclick="showPage('attendance')">Attendance</li>
+    <li onclick="showPage('payroll')">Payroll</li>
+    <li onclick="showPage('about')">About</li>
+    <li onclick="showPage('contact')">Contact</li>
+    <li onclick="showPage('login')" id="loginLink">Login</li>
+    <li onclick="logout()" id="logoutLink" style="display:none;">Logout</li>
+  </ul>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="card">
+    <h3>Welcome to HRPro</h3>
+    <p>Human Resource Management System Dashboard</p>
+  </div>
+  <div class="card">
+    <h4>Quick Stats</h4>
+    <p>Total Employees: <span id="empCount">0</span></p>
+    <p>Attendance Today: 0</p>
+    <p>Payroll Summary: ₹0</p>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section id="signup">
+  <div class="card">
+    <h3>Signup</h3>
+    <input id="sName" placeholder="Full Name">
+    <input id="sEmail" placeholder="Email">
+    <input id="sPass" type="password" placeholder="Password">
+    <select id="sRole">
+      <option>Employee</option>
+      <option>HR</option>
+    </select>
+    <input id="sPhone" placeholder="Contact Number">
+    <button onclick="signup()">Register</button>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+  <div class="card">
+    <h3>Login</h3>
+    <input id="lEmail" placeholder="Email">
+    <input id="lPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+</section>
+
+<!-- EMPLOYEES -->
+<section id="employees">
+  <div class="card">
+    <h3>Add Employee</h3>
+    <input id="eName" placeholder="Employee Name">
+    <input id="eId" placeholder="Employee ID">
+    <input id="eDept" placeholder="Department">
+    <input id="eRole" placeholder="Role">
+    <input id="ePhone" placeholder="Contact">
+    <button onclick="addEmployee()">Add</button>
+  </div>
+
+  <div class="card">
+    <h3>Employee List</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody id="empTable"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ATTENDANCE -->
+<section id="attendance">
+  <div class="card">
+    <h3>Attendance</h3>
+    <table>
+      <tr>
+        <th>Employee</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>Demo User</td>
+        <td>Today</td>
+        <td>Present</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- PAYROLL -->
+<section id="payroll">
+  <div class="card">
+    <h3>Payroll</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Basic</th>
+        <th>Allowances</th>
+        <th>Deductions</th>
+        <th>Net Salary</th>
+      </tr>
+      <tr>
+        <td>Demo User</td>
+        <td>30000</td>
+        <td>5000</td>
+        <td>2000</td>
+        <td>33000</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="card">
+    <h3>About HRPro</h3>
+    <p>HRPro is a frontend-based HR Management System.</p>
+    <ul>
+      <li>Employee Management</li>
+      <li>Attendance Tracking</li>
+      <li>Payroll Processing</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="card">
+    <h3>Contact HR</h3>
+    <input placeholder="Name">
+    <input placeholder="Email">
+    <textarea placeholder="Message"></textarea>
+    <button>Submit</button>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  © 2026 HRPro | Support: hr@hrpro.com
+</footer>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function signup() {
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  users.push({
+    name: sName.value,
+    email: sEmail.value,
+    password: sPass.value,
+    role: sRole.value,
+    phone: sPhone.value
+  });
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Signup successful");
+  showPage("login");
+}
+
+function login() {
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let user = users.find(u => u.email === lEmail.value && u.password === lPass.value);
+  if (user) {
+    localStorage.setItem("loggedUser", JSON.stringify(user));
+    loginLink.style.display = "none";
+    logoutLink.style.display = "block";
+    showPage("home");
+  } else {
+    alert("Invalid credentials");
+  }
+}
+
+function logout() {
+  localStorage.removeItem("loggedUser");
+  loginLink.style.display = "block";
+  logoutLink.style.display = "none";
+  showPage("login");
+}
+
+function addEmployee() {
+  let employees = JSON.parse(localStorage.getItem("employees")) || [];
+  employees.push({
+    name: eName.value,
+    id: eId.value,
+    dept: eDept.value,
+    role: eRole.value
+  });
+  localStorage.setItem("employees", JSON.stringify(employees));
+  loadEmployees();
+}
+
+function loadEmployees() {
+  let employees = JSON.parse(localStorage.getItem("employees")) || [];
+  empTable.innerHTML = "";
+  employees.forEach(e => {
+    empTable.innerHTML += `
+      <tr>
+        <td>${e.name}</td>
+        <td>${e.id}</td>
+        <td>${e.dept}</td>
+        <td>${e.role}</td>
+      </tr>`;
+  });
+  empCount.innerText = employees.length;
+}
+
+loadEmployees();
+</script>
+
+</body>
+</html>

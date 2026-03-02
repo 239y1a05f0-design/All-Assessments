@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IPLStats – IPL Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    /* Navbar */
+    nav {
+      background: #0b3d91;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      flex-wrap: wrap;
+    }
+
+    nav h2 {
+      margin: 0;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    nav ul li {
+      margin: 5px 10px;
+      cursor: pointer;
+    }
+
+    nav ul li:hover,
+    .active {
+      color: yellow;
+      font-weight: bold;
+    }
+
+    section {
+      display: none;
+      padding: 20px;
+    }
+
+    .show {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+      display: inline-block;
+      width: 250px;
+      vertical-align: top;
+    }
+
+    input, select, textarea {
+      padding: 8px;
+      margin: 5px;
+      width: 250px;
+    }
+
+    button {
+      padding: 8px 15px;
+      background: #0b3d91;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #082c6b;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #0b3d91;
+      color: white;
+    }
+
+    .top-team {
+      background-color: #d4edda;
+      font-weight: bold;
+    }
+
+    footer {
+      background: #0b3d91;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+    }
+
+    @media(max-width:600px){
+      .card {
+        width: 100%;
+      }
+      nav ul {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <h2>🏏 IPLStats</h2>
+  <ul>
+    <li onclick="showPage('home')" class="active">Home</li>
+    <li onclick="showPage('teams')">Teams</li>
+    <li onclick="showPage('players')">Players</li>
+    <li onclick="showPage('matches')">Matches</li>
+    <li onclick="showPage('points')">Points Table</li>
+    <li onclick="showPage('about')">About</li>
+    <li onclick="showPage('contact')">Contact</li>
+  </ul>
+</nav>
+
+<!-- Home -->
+<section id="home" class="show">
+  <h2>Welcome to IPLStats</h2>
+  <p>The Indian Premier League (IPL) is a professional T20 cricket league in India.</p>
+  <h3>Upcoming Match</h3>
+  <p>MI vs CSK – March 28, 2026</p>
+</section>
+
+<!-- Teams -->
+<section id="teams">
+  <h2>IPL Teams</h2>
+  <input type="text" id="teamSearch" placeholder="Search Team" onkeyup="searchTeams()">
+  <div id="teamList"></div>
+</section>
+
+<!-- Players -->
+<section id="players">
+  <h2>IPL Players</h2>
+  <input type="text" id="playerSearch" placeholder="Search Player" onkeyup="searchPlayers()">
+  <select id="roleFilter" onchange="filterPlayers()">
+    <option value="All">All Roles</option>
+    <option value="Batsman">Batsman</option>
+    <option value="Bowler">Bowler</option>
+    <option value="All-Rounder">All-Rounder</option>
+  </select>
+  <div id="playerList"></div>
+</section>
+
+<!-- Matches -->
+<section id="matches">
+  <h2>IPL Matches</h2>
+  <div id="matchList"></div>
+</section>
+
+<!-- Points Table -->
+<section id="points">
+  <h2>Points Table</h2>
+  <button onclick="sortPoints()">Sort by Points</button>
+  <table id="pointsTable">
+    <tr>
+      <th>Team</th>
+      <th>Matches</th>
+      <th>Wins</th>
+      <th>Losses</th>
+      <th>Points</th>
+    </tr>
+  </table>
+</section>
+
+<!-- About -->
+<section id="about">
+  <h2>About IPL</h2>
+  <p>IPL started in 2008. It follows round-robin and playoff format.</p>
+  <p>Each team plays league matches and top 4 qualify for playoffs.</p>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <h2>Contact Us</h2>
+  <input type="text" id="name" placeholder="Your Name"><br>
+  <input type="email" id="email" placeholder="Your Email"><br>
+  <textarea id="message" placeholder="Your Message"></textarea><br>
+  <button onclick="submitForm()">Submit</button>
+  <p id="formMsg"></p>
+</section>
+
+<!-- Footer -->
+<footer>
+  Official IPL Website |
+  Email: support@iplstats.com |
+  © 2026 IPLStats
+</footer>
+
+<script>
+
+function showPage(pageId){
+  document.querySelectorAll("section").forEach(sec => sec.classList.remove("show"));
+  document.getElementById(pageId).classList.add("show");
+
+  document.querySelectorAll("nav ul li").forEach(li => li.classList.remove("active"));
+  event.target.classList.add("active");
+}
+
+/* Teams Data */
+const teams = [
+  {name:"Mumbai Indians", captain:"Rohit Sharma", ground:"Wankhede", wins:5},
+  {name:"Chennai Super Kings", captain:"MS Dhoni", ground:"Chepauk", wins:5},
+  {name:"RCB", captain:"Faf du Plessis", ground:"Chinnaswamy", wins:0}
+];
+
+function loadTeams(){
+  let output="";
+  teams.forEach(t=>{
+    output+=`<div class="card">
+      <h3>${t.name}</h3>
+      <p>Captain: ${t.captain}</p>
+      <p>Ground: ${t.ground}</p>
+      <p>Total Wins: ${t.wins}</p>
+    </div>`;
+  });
+  document.getElementById("teamList").innerHTML=output;
+}
+loadTeams();
+
+function searchTeams(){
+  let search=document.getElementById("teamSearch").value.toLowerCase();
+  let filtered=teams.filter(t=>t.name.toLowerCase().includes(search));
+  let output="";
+  filtered.forEach(t=>{
+    output+=`<div class="card">
+      <h3>${t.name}</h3>
+      <p>Captain: ${t.captain}</p>
+      <p>Ground: ${t.ground}</p>
+      <p>Total Wins: ${t.wins}</p>
+    </div>`;
+  });
+  document.getElementById("teamList").innerHTML=output;
+}
+
+/* Players */
+const players=[
+  {name:"Virat Kohli", team:"RCB", role:"Batsman"},
+  {name:"Jasprit Bumrah", team:"MI", role:"Bowler"},
+  {name:"Ravindra Jadeja", team:"CSK", role:"All-Rounder"}
+];
+
+function loadPlayers(){
+  let output="";
+  players.forEach(p=>{
+    output+=`<div class="card">
+      <h3>${p.name}</h3>
+      <p>Team: ${p.team}</p>
+      <p>Role: ${p.role}</p>
+    </div>`;
+  });
+  document.getElementById("playerList").innerHTML=output;
+}
+loadPlayers();
+
+function searchPlayers(){
+  let search=document.getElementById("playerSearch").value.toLowerCase();
+  let filtered=players.filter(p=>p.name.toLowerCase().includes(search));
+  displayPlayers(filtered);
+}
+
+function filterPlayers(){
+  let role=document.getElementById("roleFilter").value;
+  if(role==="All"){ loadPlayers(); return; }
+  let filtered=players.filter(p=>p.role===role);
+  displayPlayers(filtered);
+}
+
+function displayPlayers(data){
+  let output="";
+  data.forEach(p=>{
+    output+=`<div class="card">
+      <h3>${p.name}</h3>
+      <p>Team: ${p.team}</p>
+      <p>Role: ${p.role}</p>
+    </div>`;
+  });
+  document.getElementById("playerList").innerHTML=output;
+}
+
+/* Matches */
+const matches=[
+  {teams:"MI vs CSK", date:"28 March 2026", result:"Upcoming"},
+  {teams:"RCB vs MI", date:"30 March 2026", result:"MI Won"}
+];
+
+function loadMatches(){
+  let output="";
+  matches.forEach(m=>{
+    output+=`<div class="card">
+      <h3>${m.teams}</h3>
+      <p>Date: ${m.date}</p>
+      <p>Result: ${m.result}</p>
+    </div>`;
+  });
+  document.getElementById("matchList").innerHTML=output;
+}
+loadMatches();
+
+/* Points Table */
+const points=[
+  {team:"MI", matches:10, wins:7, loss:3, pts:14},
+  {team:"CSK", matches:10, wins:6, loss:4, pts:12},
+  {team:"RCB", matches:10, wins:4, loss:6, pts:8}
+];
+
+function loadPoints(){
+  let table=document.getElementById("pointsTable");
+  points.forEach((p,index)=>{
+    let row=table.insertRow();
+    if(index<2) row.classList.add("top-team");
+    row.insertCell(0).innerHTML=p.team;
+    row.insertCell(1).innerHTML=p.matches;
+    row.insertCell(2).innerHTML=p.wins;
+    row.insertCell(3).innerHTML=p.loss;
+    row.insertCell(4).innerHTML=p.pts;
+  });
+}
+loadPoints();
+
+function sortPoints(){
+  points.sort((a,b)=>b.pts-a.pts);
+  document.getElementById("pointsTable").innerHTML=`
+    <tr>
+      <th>Team</th><th>Matches</th><th>Wins</th><th>Losses</th><th>Points</th>
+    </tr>`;
+  loadPoints();
+}
+
+/* Contact Form */
+function submitForm(){
+  let name=document.getElementById("name").value;
+  let email=document.getElementById("email").value;
+  let message=document.getElementById("message").value;
+  let msg=document.getElementById("formMsg");
+
+  if(name===""||email===""||message===""){
+    msg.innerHTML="Please fill all fields!";
+    msg.style.color="red";
+    return;
+  }
+
+  let emailPattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+  if(!email.match(emailPattern)){
+    msg.innerHTML="Invalid Email Format!";
+    msg.style.color="red";
+    return;
+  }
+
+  msg.innerHTML="Message Sent Successfully!";
+  msg.style.color="green";
+}
+
+</script>
+
+</body>
+</html>

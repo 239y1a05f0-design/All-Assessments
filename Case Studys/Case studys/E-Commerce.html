@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ShopEase - Online Shopping</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f5f5f5;
+}
+
+.navbar{
+background:#2e7d32;
+color:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 20px;
+flex-wrap:wrap;
+}
+
+.navbar a{
+color:white;
+text-decoration:none;
+margin:5px 10px;
+cursor:pointer;
+}
+
+.navbar a:hover{
+text-decoration:underline;
+}
+
+.container{
+padding:20px;
+}
+
+.hero{
+background:#4caf50;
+color:white;
+padding:60px;
+text-align:center;
+font-size:28px;
+margin-bottom:20px;
+}
+
+.product-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.product-card{
+background:white;
+padding:15px;
+border-radius:8px;
+text-align:center;
+box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+.product-card img{
+width:100%;
+height:150px;
+object-fit:cover;
+}
+
+button{
+padding:8px 12px;
+margin:5px;
+border:none;
+background:#2e7d32;
+color:white;
+cursor:pointer;
+border-radius:4px;
+}
+
+button:hover{
+background:#1b5e20;
+}
+
+input{
+padding:8px;
+width:100%;
+margin:8px 0;
+}
+
+.hidden{
+display:none;
+}
+
+footer{
+background:#333;
+color:white;
+text-align:center;
+padding:15px;
+margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+<h2>ShopEase 🛒</h2>
+<div>
+<a onclick="showPage('home')">Home</a>
+<a onclick="showPage('products')">Products</a>
+<a onclick="showPage('cart')">Cart</a>
+<a onclick="showPage('wishlist')">Wishlist</a>
+<a onclick="showPage('about')">About</a>
+<a onclick="showPage('contact')">Contact</a>
+<a id="loginLink" onclick="showPage('login')">Login</a>
+<a id="signupLink" onclick="showPage('signup')">Signup</a>
+<a id="logoutBtn" class="hidden" onclick="logout()">Logout</a>
+</div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="container">
+<div class="hero">Welcome to ShopEase - Fresh Products Everyday</div>
+<h2>Featured Products</h2>
+<div class="product-grid" id="homeProducts"></div>
+</div>
+
+<!-- PRODUCTS -->
+<div id="products" class="container hidden">
+<h2>All Products</h2>
+<input type="text" placeholder="Search product..." onkeyup="searchProduct(this.value)">
+<div class="product-grid" id="productList"></div>
+</div>
+
+<!-- CART -->
+<div id="cart" class="container hidden">
+<h2>Your Cart</h2>
+<div id="cartItems"></div>
+<h3 id="cartTotal"></h3>
+</div>
+
+<!-- WISHLIST -->
+<div id="wishlist" class="container hidden">
+<h2>Your Wishlist</h2>
+<div id="wishlistItems"></div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="container hidden">
+<h2>Login</h2>
+<input type="email" id="loginEmail" placeholder="Email">
+<input type="password" id="loginPassword" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<!-- SIGNUP -->
+<div id="signup" class="container hidden">
+<h2>Signup</h2>
+<input type="text" id="signupName" placeholder="Full Name">
+<input type="email" id="signupEmail" placeholder="Email">
+<input type="password" id="signupPassword" placeholder="Password">
+<input type="password" id="signupConfirm" placeholder="Confirm Password">
+<button onclick="signup()">Signup</button>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="container hidden">
+<h2>About Us</h2>
+<p>ShopEase started in 2026 with the mission to provide fresh groceries at affordable prices.</p>
+<p>We focus on quality, fast delivery, and customer satisfaction.</p>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="container hidden">
+<h2>Contact Us</h2>
+<input type="text" id="contactName" placeholder="Your Name">
+<input type="email" id="contactEmail" placeholder="Your Email">
+<input type="text" id="contactMessage" placeholder="Your Message">
+<button onclick="submitContact()">Send Message</button>
+</div>
+
+<footer>
+© 2026 ShopEase | Email: shopease@gmail.com | Phone: 9876543210
+</footer>
+
+<script>
+// PRODUCTS DATA
+const products = [
+{id:1,name:"Apple",price:100,category:"Fruits"},
+{id:2,name:"Banana",price:60,category:"Fruits"},
+{id:3,name:"Tomato",price:40,category:"Vegetables"},
+{id:4,name:"Potato",price:30,category:"Vegetables"},
+{id:5,name:"Turmeric",price:200,category:"Spices"}
+];
+
+// PAGE NAVIGATION
+function showPage(page){
+document.querySelectorAll(".container").forEach(p=>p.classList.add("hidden"));
+document.getElementById(page).classList.remove("hidden");
+}
+
+// DISPLAY PRODUCTS
+function loadProducts(){
+const home = document.getElementById("homeProducts");
+const list = document.getElementById("productList");
+
+home.innerHTML="";
+list.innerHTML="";
+
+products.forEach(p=>{
+const card=`
+<div class="product-card">
+<img src="https://via.placeholder.com/200">
+<h3>${p.name}</h3>
+<p>₹${p.price}</p>
+<button onclick="addToCart(${p.id})">Add to Cart</button>
+<button onclick="addToWishlist(${p.id})">Wishlist</button>
+</div>`;
+home.innerHTML+=card;
+list.innerHTML+=card;
+});
+}
+
+// SEARCH
+function searchProduct(value){
+const filtered=products.filter(p=>p.name.toLowerCase().includes(value.toLowerCase()));
+const list=document.getElementById("productList");
+list.innerHTML="";
+filtered.forEach(p=>{
+list.innerHTML+=`
+<div class="product-card">
+<img src="https://via.placeholder.com/200">
+<h3>${p.name}</h3>
+<p>₹${p.price}</p>
+<button onclick="addToCart(${p.id})">Add to Cart</button>
+<button onclick="addToWishlist(${p.id})">Wishlist</button>
+</div>`;
+});
+}
+
+// CART
+function addToCart(id){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+cart.push(id);
+localStorage.setItem("cart",JSON.stringify(cart));
+alert("Added to Cart");
+loadCart();
+}
+
+function loadCart(){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let container=document.getElementById("cartItems");
+container.innerHTML="";
+let total=0;
+
+cart.forEach(id=>{
+let product=products.find(p=>p.id===id);
+total+=product.price;
+container.innerHTML+=`<p>${product.name} - ₹${product.price}</p>`;
+});
+document.getElementById("cartTotal").innerText="Total: ₹"+total;
+}
+
+// WISHLIST
+function addToWishlist(id){
+let wishlist=JSON.parse(localStorage.getItem("wishlist"))||[];
+wishlist.push(id);
+localStorage.setItem("wishlist",JSON.stringify(wishlist));
+alert("Added to Wishlist");
+loadWishlist();
+}
+
+function loadWishlist(){
+let wishlist=JSON.parse(localStorage.getItem("wishlist"))||[];
+let container=document.getElementById("wishlistItems");
+container.innerHTML="";
+wishlist.forEach(id=>{
+let product=products.find(p=>p.id===id);
+container.innerHTML+=`<p>${product.name} - ₹${product.price}</p>`;
+});
+}
+
+// SIGNUP
+function signup(){
+let name=document.getElementById("signupName").value;
+let email=document.getElementById("signupEmail").value;
+let pass=document.getElementById("signupPassword").value;
+let confirm=document.getElementById("signupConfirm").value;
+
+if(!name||!email||!pass||!confirm){
+alert("All fields required");
+return;
+}
+if(pass!==confirm){
+alert("Passwords do not match");
+return;
+}
+
+localStorage.setItem("user",JSON.stringify({name,email,pass}));
+alert("Signup Successful");
+showPage("login");
+}
+
+// LOGIN
+function login(){
+let email=document.getElementById("loginEmail").value;
+let pass=document.getElementById("loginPassword").value;
+let user=JSON.parse(localStorage.getItem("user"));
+
+if(user && user.email===email && user.pass===pass){
+localStorage.setItem("loggedIn",true);
+alert("Login Successful");
+document.getElementById("loginLink").classList.add("hidden");
+document.getElementById("signupLink").classList.add("hidden");
+document.getElementById("logoutBtn").classList.remove("hidden");
+showPage("home");
+}else{
+alert("Invalid Credentials");
+}
+}
+
+// LOGOUT
+function logout(){
+localStorage.removeItem("loggedIn");
+alert("Logged Out");
+location.reload();
+}
+
+// CONTACT
+function submitContact(){
+let name=document.getElementById("contactName").value;
+let email=document.getElementById("contactEmail").value;
+let msg=document.getElementById("contactMessage").value;
+
+if(!name||!email||!msg){
+alert("All fields required");
+return;
+}
+alert("Message Sent Successfully!");
+}
+
+// INIT
+loadProducts();
+loadCart();
+loadWishlist();
+</script>
+
+</body>
+</html>
