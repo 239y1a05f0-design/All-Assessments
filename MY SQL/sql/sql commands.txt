@@ -1,0 +1,285 @@
+create database day1;
+
+create table student(
+sno int,
+sname varchar(50),
+saddress varchar(89)
+);
+
+insert into student values(1,"Bindu","ITI CIRCLE");
+insert into student values(2,"kundana","Ramnagar");
+insert into student values(3,"deepika","superroad");
+select * from student;
+
+create table product(
+pid int,
+pname varchar(40),
+cost int,
+manufacture_name varchar(50),
+manufacture_date date
+);
+insert into product values(1,"soap",100,"bindu","2006-01-01");
+select * from product;
+
+create table employee16(
+eid int primary key,
+ename varchar(54) NOT NUll,
+salary int,
+bg varchar(45) default("O+ve"),
+age int check(age between 18 and 60),
+email varchar(60) unique
+);
+insert into employee16(eid,ename,salary,age) values(1,"kundana",20000,56);
+select * from employee16;
+
+CREATE TABLE patient (
+    pid INT,
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    age INT,
+    bg VARCHAR(10)
+);
+INSERT INTO patient (pid, fname, lname, age, bg) VALUES
+(1, 'madhava', 'reddy', 45, 'o+ve'),
+(2, 'abhinav', 'bandra', 45, 'o-ve'),
+(4, 'hari', 'kiran', 60, 'b-ve'),
+(3, 'madhava', 'kiran', 52, 'o+ve'),
+(5, 'veena', 'kumari', 42, NULL),
+(6, 'k_iran', 'kumar', 39, 'b-ve'),
+(2, 'abhinav', 'bandra', 45, 'o-ve'),
+(7, 'mahes%h', 'nambootri', 36, 'b+ve'),
+(8, 'rahul', 'kumar', 46, 'b-ve'),
+(9, 'bharat', 'kumar', 56, 'b-ve');
+-- select * from patient order by fname;
+-- select concat(fname,lname) as 'fullname',age from patient order by age;
+select distinct * from patient;
+select distinct bg from patient;
+
+
+
+CREATE TABLE employee30 (
+    eid INT,
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    age INT,
+    salary INT NULL,
+    dept VARCHAR(20),
+    doj DATE
+);
+INSERT INTO employee30 (eid, fname, lname, age, salary, dept, doj) VALUES 
+(1, 'rajeev', 'sukla', 23, 12000, '.net', '2011-10-23'),
+(2, 'sowmya', 'kumari', 23, 19000, 'db', '2010-11-13'),
+(3, 'kishore', 'kumar', 27, 36000, 'android', '2011-10-16'),
+(4, 'abimanyu', 'biswal', 22, NULL, 'android', '2010-02-20'),
+(5, 'soni', 'kumar', 24, 21800, '.net', '2009-06-21'),
+(6, 'anu', '_singh', 22, 12000, 'db', '2010-10-23'),
+(7, '_dinesh', 'moh%anty', 23, 15000, '.net', '2009-08-26'),
+(8, 'nishala', '_kumari', 22, 18000, 'db', '2008-07-19'),
+(1, 'rajeev', 'sukla', 23, 12000, '.net', '2011-10-23');
+select * from empolyee30 order by fname desc;
+select * from employee30;
+select avg(age) as 'avg_age' from employee30;
+select avg(salary) as 'avg_salary' from employe30e;
+select min(age) as 'min_age' from employee30;
+select max(age) as 'max_age' from employee30;
+select max(salary) as 'max_salary' from employee30;
+select min(salary) as 'min_salary' from employee30;
+select sum(salary) as 'sum_salary' from employee30;
+select sum(age) as 'sum_age' from employee30;
+select count(age) as 'count_age' from employee30;
+
+
+
+create database day2;
+use data;
+CREATE TABLE employee9 (
+    eid INT,
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    age INT,
+    salary INT NULL,
+    dept VARCHAR(20),
+    doj DATE
+);
+INSERT INTO employee9 (eid, fname, lname, age, salary, dept, doj) VALUES
+(1, 'rajeev', 'sukla', 23, 12000, '.net', '2011-10-23'),
+(2, 'sowmya', 'kumari', 23, 19000, 'db', '2010-11-13'),
+(3, 'kishore', 'kumar', 27, 36000, 'android', '2011-10-16'),
+(4, 'abimanyu', 'biswal', 22, NULL, 'android', '2010-02-20'),
+(5, 'soni', 'kumar', 24, 21800, '.net', '2009-06-21'),
+(6, 'anu', '_singh', 22, 12000, 'db', '2010-10-23'),
+(7, '_dinesh', 'moh%anty', 23, 15000, '.net', '2009-08-26'),
+(8, 'nishala', '_kumari', 22, 18000, 'db', '2008-07-19');
+select * from employee9;
+
+select concat(fname,lname) as 'fullname',age from employee9;
+
+select * from employee9 order by age;
+
+select * from employee9 order by fname,lname,age;
+
+select distinct * from employee9 ;
+
+select distinct * from employee9 order by  age desc limit 4;
+
+select * from employee9 where salary >20000;
+
+select concat(fname,lname)as 'fullname',age from employee9 where age between 20 and 23;
+
+select * from employee9 where salary between 15000 and 20000;
+
+select * from employee9 where salary not between 15000 and 20000;
+
+select * from employee9 where salary in (15000,21800,36000);
+select * from employee9 where salary not in (15000,21800,36000);
+select * from employee9 where salary is null;
+select * from employee9 where salary is not null;
+
+
+-- lab1 where clause 
+use data;
+CREATE TABLE patients (
+    pid INT,
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    age INT,
+    bg VARCHAR(10)
+);
+
+INSERT INTO patients (pid, fname, lname, age, bg) VALUES
+(1, 'madhava', 'reddy', 45, 'o+ve'),
+(2, 'abhinav', 'bandra', 45, 'o-ve'),
+(4, 'hari', 'kiran', 60, 'b-ve'),
+(3, 'madhava', 'kiran', 52, 'o+ve'),
+(5, 'veena', 'kumari', 42, NULL),
+(6, 'k_iran', 'kumar', 39, 'b-ve'),
+(2, 'abhinav', 'bandra', 45, 'o-ve'),
+(7, 'mahes%h', 'nambootri', 36, 'b+ve'),
+(8, 'rahul', 'kumar', 46, 'b-ve'),
+(9, 'bharat', 'kumar', 56, 'b-ve');
+
+select * from patients;
+
+select * from patients where age>40;
+select * from patients where age between 40 and 50;
+select * from patients where age>40 and bg!='o-ve';
+select * from patients where  bg is not null;
+select * from patients where bg is null;
+select * from patients where age in(42,36,60);
+select * from patients where age not in(42,36,60);
+select * from patients where age>40 order by bg desc limit 3;
+select * from patients where fname like 'a%';
+select * from patients where fname like '%a';
+select * from patients where fname like '%a%';
+select * from patients where fname like '_a%';
+select * from patients where fname like 'a%_';
+
+-- like clause lab_1
+
+select * from patients where fname like 'm%';
+select * from patients where lname like '%i';
+select * from patients where lname like '%a_';
+select * from patients where lname like '%r__';
+select * from patients where lname like '%r__';
+select * from patients where fname like '%a%';
+
+INSERT INTO employee (eid, fname, lname, age, salary, dept, doj) VALUES
+(9,'giri','babu',27,18000,'.net','2014-06-24');
+
+SET SQL_SAFE_UPDATES = 0;
+update employee set fname='rice',lname='tin' where eid=9;
+select * from employee;
+delete from employee where eid=9;
+
+-- insert update delete lab1
+
+insert into patients values(10,'ahana','kumar',78,'o+ve');
+insert into patients values(11,'silli','suresh',81,'null');
+update patients set fname='raja',lname='raveender',age=66,bg='o_ve' where pid=10;
+select * from patients;
+update patients set fname='meena',lname='kumari',age=66,bg='o_ve' where pid=11;
+delete from patients where pid=10;
+delete from patients where pid=11;
+delete from patients;
+drop table patients;
+truncate table employee;
+
+
+
+-- AGGREGATE FUNCTIONS
+
+
+use data;
+CREATE TABLE employe (
+    eid INT,
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    age INT,
+    salary INT NULL,
+    dept VARCHAR(20),
+    doj DATE
+);
+INSERT INTO employe (eid, fname, lname, age, salary, dept, doj) VALUES
+(1, 'rajeev', 'sukla', 23, 12000, '.net', '2011-10-23'),
+(2, 'sowmya', 'kumari', 23, 19000, 'db', '2010-11-13'),
+(3, 'kishore', 'kumar', 27, 36000, 'android', '2011-10-16'),
+(4, 'abimanyu', 'biswal', 22, NULL, 'android', '2010-02-20'),
+(5, 'soni', 'kumar', 24, 21800, '.net', '2009-06-21'),
+(6, 'anu', '_singh', 22, 12000, 'db', '2010-10-23'),
+(7, '_dinesh', 'moh%anty', 23, 15000, '.net', '2009-08-26'),
+(8, 'nishala', '_kumari', 22, 18000, 'db', '2008-07-19');
+select * from employe;
+select avg(age) as 'avg_age' from employe;
+select avg(salary) as 'avg_salary' from employe;
+select min(age) as 'min_age' from employe;
+select max(age) as 'max_age' from employe;
+select max(salary) as 'max_salary' from employe;
+select min(salary) as 'min_salary' from employe;
+select sum(salary) as 'sum_salary' from employe;
+select sum(age) as 'sum_age' from employe;
+select count(age) as 'count_age' from employe;
+select bg from patients group by bg;
+select bg from patient group by bg having avg(age)>45;
+-- Lab1
+select bg, count(*) as‘count’ from patient
+group by bg;
+-- LAB-2
+select dept from employee9 group by dept;
+-- LAB_3
+select max(age) as 'max age',bg from patients group by bg;
+select lname,MIN(age) from patients group by bg,lname;
+select bg,MAX(age) as 'max age' from patients group by bg having MAx(age)>40;
+select p1.* from patient p1 where 3=( select
+count(distinct(p2.pid)) from patients p2 where
+p2.age>p1.age);
+
+
+
+
+CREATE TABLE profession (
+    prof_id INT PRIMARY KEY,
+    profession VARCHAR(50),
+    pid INT
+);
+CREATE TABLE person (
+    pid INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+INSERT INTO profession (prof_id, profession, pid) VALUES
+(1, 'cricketer', 1),
+(3, 'teacher', 4),
+(4, 'politician', 2),
+(5, 'engineer', 3),
+(6, 'doctor', 10);
+INSERT INTO person (pid, name, age) VALUES
+(1, 'shewag', 39),
+(2, 'modi', 40),
+(3, 'babu', 29),
+(4, 'malik', 30);
+SELECT pf.*, p.*
+FROM profession pf
+LEFT OUTER JOIN person p
+ON pf.pid = p.pid;
+
+
